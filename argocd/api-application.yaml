@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api
+  namespace: argocd
+  labels:
+    name: api
+    app: api
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/feeeeliipe/k8s-argo-example
+    targetRevision: HEAD
+    path: api/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  ## Sync Policy
+  syncPolicy:
+    automated: 
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:     
+      - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+      - CreateNamespace=true # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+      - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+      - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
+    retry:
+      limit: 5 
+      backoff:
+        duration: 5s 
+        factor: 2 
+        maxDuration: 3m 
