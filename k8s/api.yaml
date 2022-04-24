@@ -27,7 +27,7 @@ spec:
         app: api
     spec:
       containers:
-      - image: feeeeliipe/api:blue
+      - image: feeeeliipe/api:green
         name: api
         ports:
         - containerPort: 3000
